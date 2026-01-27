@@ -180,4 +180,4 @@ ollama pull nomic-embed-text
 - First run with embeddings will take time depending on PDF size
 - All data stays local - no cloud uploads
 - Internet connection not required after models are downloaded
-- Respects PDF copyright - use only with authorized PDFs
+- Respects PDF copyright - use only with authorized 

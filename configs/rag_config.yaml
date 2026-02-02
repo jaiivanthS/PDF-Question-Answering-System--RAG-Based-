@@ -1,0 +1,25 @@
+# RAG Pipeline Configuration
+
+# Document Processing
+document_processing:
+  chunk_size: 1000
+  chunk_overlap: 200
+  separators: ["\n\n", "\n", " ", ""]
+  
+# Vector Store Settings
+vector_store:
+  type: "chroma"  # Options: chroma, faiss, pinecone
+  persist_directory: "data/vector_stores"
+  collection_name: "pdf_documents"
+  
+# Retrieval Settings
+retrieval:
+  search_type: "similarity"  # Options: similarity, mmr
+  k: 4  # Number of documents to retrieve
+  score_threshold: 0.7
+  
+# RAG Chain Settings
+rag_chain:
+  chain_type: "stuff"  # Options: stuff, map_reduce, refine
+  return_source_documents: true
+  verbose: false

@@ -10,11 +10,16 @@ pymupdf==1.23.26
 langchain==0.1.6
 langchain-community==0.0.20
 
-# Embeddings
-sentence-transformers==2.7.0
-torch==2.2.0
+# Embeddings - TESTED WORKING VERSIONS
+torch==2.0.1
+torchvision==0.15.2
+torchaudio==2.0.2
+transformers==4.26.1
+sentence-transformers==2.2.2
+huggingface-hub==0.11.1
 
 # Vector Database
+httpx<0.28.0  # ChromaDB compatibility
 chromadb==0.5.0
 
 # LLM Integration (OpenRouter uses OpenAI-compatible API)

@@ -17,24 +17,23 @@ PDF-Question-Answering-System--RAG-Based-/
 │       │
 │       ├── models/               # LLM and model configurations
 │       │   ├── __init__.py
-│       │   ├── llm_config.py     # LLM setup (Ollama, OpenAI, etc.)
+│       │   ├── llm_config.py     # LLM setup (OpenRouter API)
 │       │   └── prompt_templates.py # Prompt engineering templates
 │       │
 │       ├── utils/                # Utility functions
 │       │   ├── __init__.py
-│       │   ├── text_processing.py # Text chunking, cleaning
+│       │   ├── text_processing.py # Text chunking with LangChain
 │       │   ├── config_loader.py   # Configuration management
 │       │   └── logger.py          # Logging utilities
 │       │
-│       ├── api/                  # API endpoints (FastAPI/Flask)
+│       ├── api/                  # API endpoints (FastAPI)
 │       │   ├── __init__.py
 │       │   ├── routes.py         # API route definitions
 │       │   └── schemas.py        # Pydantic models/schemas
 │       │
 │       └── ui/                   # User interface
 │           ├── __init__.py
-│           ├── streamlit_app.py  # Streamlit UI
-│           └── gradio_app.py     # Alternative Gradio UI
+│           └── streamlit_app.py  # Streamlit UI
 │
 ├── tests/                        # Test suite
 │   ├── __init__.py
@@ -63,8 +62,7 @@ PDF-Question-Answering-System--RAG-Based-/
 │   └── experiments.ipynb         # Model experiments
 │
 ├── scripts/                      # Utility scripts
-│   ├── setup_ollama.sh           # Ollama setup script
-│   ├── download_models.py        # Model download script
+│   ├── setup_env.py              # Environment setup script
 │   └── preprocess_pdfs.py        # Batch PDF preprocessing
 │
 ├── logs/                         # Application logs
@@ -82,8 +80,7 @@ PDF-Question-Answering-System--RAG-Based-/
 ├── requirements.txt              # Python dependencies
 ├── setup.py                      # Package installation
 ├── pyproject.toml                # Modern Python project config
-├── README.md                     # Project README
-└── OLLAMA_SETUP.md               # Ollama setup guide
+└── README.md                     # Project README
 ```
 
 ## Directory Descriptions
@@ -91,11 +88,11 @@ PDF-Question-Answering-System--RAG-Based-/
 ### `/src/pdf_rag/`
 Main application package containing all source code.
 
-- **core/**: Core RAG functionality including PDF loading, embeddings, vector storage, and retrieval
-- **models/**: LLM configurations and prompt templates
-- **utils/**: Shared utility functions for text processing, configuration, and logging
-- **api/**: REST API implementation (FastAPI recommended)
-- **ui/**: User interface implementations (Streamlit, Gradio, etc.)
+- **core/**: Core RAG functionality including PDF loading (PyMuPDF), embeddings (Sentence Transformers), vector storage (ChromaDB), and retrieval
+- **models/**: LLM configurations (OpenRouter API) and prompt templates
+- **utils/**: Shared utility functions for text processing (LangChain), configuration, and logging
+- **api/**: REST API implementation using FastAPI
+- **ui/**: User interface using Streamlit
 
 ### `/tests/`
 Comprehensive test suite with unit and integration tests.
@@ -103,8 +100,8 @@ Comprehensive test suite with unit and integration tests.
 ### `/data/`
 Data storage organized by processing stage:
 - **raw/**: Original uploaded PDFs
-- **processed/**: Chunked and processed documents
-- **vector_stores/**: Persistent vector database files
+- **processed/**: Chunked and processed documents (LangChain)
+- **vector_stores/**: Persistent ChromaDB vector database files
 
 ### `/configs/`
 YAML configuration files for models, RAG pipeline, and logging.

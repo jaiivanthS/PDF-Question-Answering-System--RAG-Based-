@@ -1,183 +1,192 @@
-# PDF RAG Question-Answering System with Ollama
+# PDF Question Answering System (RAG-Based)
 
-A fully local Retrieval-Augmented Generation (RAG) system for answering questions about PDF documents using Ollama.
+A powerful Retrieval-Augmented Generation (RAG) system for answering questions about PDF documents using state-of-the-art AI technologies.
 
-## Project Structure
+## 🚀 Features
 
-```
-pdf_rag_app/
-├── main.py              # Main application entry point
-├── pdf_loader.py        # PDF loading and document chunking
-├── rag.py               # RAG system implementation with Ollama
-├── requirements.txt     # Python dependencies
-├── data/                # Directory for PDF files to analyze
-└── vector_store/        # Directory for storing vector embeddings
-```
+- **PDF Processing**: Extract text from PDF documents using PyMuPDF
+- **Intelligent Chunking**: Smart text splitting with LangChain
+- **Semantic Search**: Fast similarity search using ChromaDB vector database
+- **AI-Powered Answers**: Generate accurate answers using OpenRouter API (access to multiple LLMs)
+- **User-Friendly UI**: Interactive Streamlit interface
+- **REST API**: FastAPI backend for programmatic access
+- **Persistent Storage**: ChromaDB for efficient vector storage
 
-## Features
+## 🛠️ Tech Stack
 
-- **100% Local**: Runs completely offline using Ollama
-- **PDF Loading**: Automatically loads and processes all PDFs from the `data/` directory
-- **Document Chunking**: Intelligently splits documents into overlapping chunks
-- **Vector Embeddings**: Uses Ollama's embeddings for semantic search
-- **RAG Chain**: Combines retrieval with local LLM for accurate Q&A
-- **Interactive Session**: Command-line interface for asking questions
-- **Source Attribution**: Shows which documents the answers come from
+| Component | Technology |
+|-----------|------------|
+| **Language** | Python 3.8+ |
+| **Backend** | FastAPI |
+| **Frontend** | Streamlit |
+| **PDF Parsing** | PyMuPDF |
+| **Text Chunking** | LangChain |
+| **Embeddings** | Sentence Transformers (all-MiniLM-L6-v2) |
+| **Vector Database** | ChromaDB |
+| **LLM** | OpenRouter API (supports multiple models) |
 
-## Prerequisites
+## 📋 Prerequisites
 
-### 1. Install Ollama
+- Python 3.8 or higher
+- OpenRouter API key ([Get one here](https://openrouter.ai/keys))
 
-Download and install Ollama from: https://ollama.ai
+## 🔧 Installation
 
-### 2. Pull Required Models
-
-Open a terminal and run:
-
+1. **Clone the repository**
 ```bash
-# Pull the embedding model
-ollama pull nomic-embed-text
-
-# Pull the LLM model (choose one)
-ollama pull mistral
-# OR
-ollama pull llama2
-# OR
-ollama pull neural-chat
+git clone <your-repo-url>
+cd PDF-Question-Answering-System--RAG-Based-
 ```
 
-### 3. Start Ollama Server
-
-In a terminal, run:
-
+2. **Create and activate virtual environment**
 ```bash
-ollama serve
+python -m venv .venv
+
+# Windows
+.venv\Scripts\activate
+
+# Linux/Mac
+source .venv/bin/activate
 ```
 
-This will start Ollama on `http://localhost:11434`
-
-## Setup
-
-### 1. Install Python Dependencies
-
+3. **Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Add PDF Files
+4. **Set up environment variables**
+```bash
+# Copy the example file
+copy .env.example .env  # Windows
+# cp .env.example .env  # Linux/Mac
 
-Place your PDF files in the `pdf_rag_app/data/` directory:
-
-```
-pdf_rag_app/data/
-├── document1.pdf
-├── document2.pdf
-└── ...
-```
-
-### 3. Configure Models (Optional)
-
-Edit `pdf_rag_app/.env` to change models:
-
-```
-OLLAMA_BASE_URL=http://localhost:11434
-EMBEDDING_MODEL=nomic-embed-text
-LLM_MODEL=mistral
+# Edit .env and add your OpenRouter API key
+# OPENROUTER_API_KEY=your_api_key_here
 ```
 
-**Available Models:**
-- **LLM Models**: llama2, mistral, neural-chat, orca-mini, zephyr
-- **Embedding Models**: nomic-embed-text, all-minilm
+5. **Install the package in development mode**
+```bash
+pip install -e .
+```
 
-## Usage
+## 🎯 Usage
 
-### 1. Start Ollama (in one terminal)
+### Option 1: Streamlit UI (Recommended for beginners)
 
 ```bash
-ollama serve
+streamlit run src/pdf_rag/ui/streamlit_app.py
 ```
 
-### 2. Run the Application (in another terminal)
+Then:
+1. Open your browser to http://localhost:8501
+2. Upload a PDF file using the sidebar
+3. Click "Process PDF"
+4. Ask questions about the document!
+
+### Option 2: FastAPI Backend
 
 ```bash
-cd pdf_rag_app
-python main.py
+# Start the API server
+python -m uvicorn src.pdf_rag.api.routes:app --reload
 ```
 
-### 3. Ask Questions
+API will be available at http://localhost:8000
 
-```
-Your question: What are the main topics covered?
-Your question: Summarize the key findings
-Your question: exit
-```
+**API Endpoints:**
+- `GET /` - API status
+- `POST /upload-pdf` - Upload and process PDF
+- `POST /ask` - Ask a question
+- `GET /documents/count` - Get document count
+- `DELETE /documents/clear` - Clear all documents
 
-## How It Works
+**Example API Usage:**
+```python
+import requests
 
-1. **PDF Loading**: PDFLoader reads all PDFs and splits them into chunks
-2. **Embeddings**: Each chunk is converted to vector embeddings using Ollama
-3. **Vector Store**: FAISS stores and indexes embeddings for fast retrieval
-4. **Retrieval**: When you ask a question, the system finds the most relevant chunks
-5. **Generation**: The local LLM generates an answer using the retrieved context
+# Upload PDF
+with open("document.pdf", "rb") as f:
+    response = requests.post(
+        "http://localhost:8000/upload-pdf",
+        files={"file": f}
+    )
 
-## Configuration
-
-Modify parameters in `main.py`:
-
-- `chunk_size`: Size of text chunks (default: 1000 characters)
-- `chunk_overlap`: Overlap between chunks (default: 200 characters)
-- `k`: Number of documents to retrieve (default: 3)
-- `temperature`: Response creativity (0-1, default: 0.7)
-
-## Model Performance
-
-| Model | Speed | Quality | Memory |
-|-------|-------|---------|--------|
-| mistral | Fast | Very Good | ~8GB |
-| llama2 | Medium | Excellent | ~8GB |
-| neural-chat | Very Fast | Good | ~4GB |
-| orca-mini | Very Fast | Fair | ~2GB |
-| zephyr | Medium | Good | ~4GB |
-
-## Troubleshooting
-
-### Error: "Cannot connect to Ollama at http://localhost:11434"
-
-- Make sure Ollama is running: `ollama serve`
-- Check that Ollama is on port 11434
-- Verify models are installed: `ollama list`
-
-### Error: "Model not found"
-
-Pull the required models:
-```bash
-ollama pull mistral
-ollama pull nomic-embed-text
+# Ask a question
+response = requests.post(
+    "http://localhost:8000/ask",
+    json={"question": "What is this document about?"}
+)
+print(response.json()["answer"])
 ```
 
-### Slow Embedding Generation
+## 📁 Project Structure
 
-- This is normal for first run
-- Embeddings are cached in `vector_store/`
-- Subsequent runs will be faster
+```
+src/pdf_rag/
+├── core/              # Core RAG functionality
+│   ├── pdf_loader.py      # PyMuPDF PDF loading
+│   ├── embeddings.py      # Sentence Transformers embeddings
+│   ├── vector_store.py    # ChromaDB vector storage
+│   └── retriever.py       # RAG retrieval logic
+├── models/            # LLM integration
+│   ├── llm_config.py      # OpenRouter LLM
+│   └── prompt_templates.py # Prompt templates
+├── utils/             # Utilities
+│   ├── text_processing.py # LangChain text chunking
+│   └── config_loader.py   # Configuration management
+├── api/               # FastAPI backend
+│   └── routes.py          # API endpoints
+└── ui/                # User interface
+    └── streamlit_app.py   # Streamlit UI
+```
 
-### Out of Memory
+## ⚙️ Configuration
 
-- Reduce chunk_size in main.py
-- Use a smaller model (orca-mini instead of mistral)
-- Use all-minilm instead of nomic-embed-text for embeddings
+Configuration files are located in the `configs/` directory:
 
-## Dependencies
+- **`model_config.yaml`**: LLM and embedding model settings
+- **`rag_config.yaml`**: RAG pipeline configuration (chunk size, retrieval settings, etc.)
+- **`logging_config.yaml`**: Logging configuration
 
-- **langchain**: RAG framework
-- **ollama**: Local LLM integration
-- **faiss-cpu**: Vector store
-- **pypdf**: PDF loading
-- **python-dotenv**: Configuration management
+## 🔑 OpenRouter API
 
-## Notes
+This project uses OpenRouter API which provides access to multiple LLM providers through a single API. 
 
-- First run with embeddings will take time depending on PDF size
-- All data stays local - no cloud uploads
-- Internet connection not required after models are downloaded
-- Respects PDF copyright - use only with authorized PDFs
+**Free Models Available:**
+- `meta-llama/llama-3.1-8b-instruct:free`
+- `google/gemma-2-9b-it:free`
+- `mistralai/mistral-7b-instruct:free`
+
+**Paid Models (Better Quality):**
+- `anthropic/claude-3.5-sonnet`
+- `openai/gpt-4-turbo`
+- `google/gemini-pro-1.5`
+
+Change the model in `configs/model_config.yaml` under `llm.model_name`.
+
+## 🐛 Troubleshooting
+
+**Issue: "OpenRouter API key not provided"**
+- Make sure you've created a `.env` file with your API key
+- Ensure the key is correctly formatted: `OPENROUTER_API_KEY=sk-or-...`
+
+**Issue: "No module named 'pdf_rag'"**
+- Run `pip install -e .` from the project root directory
+
+**Issue: ChromaDB errors**
+- Delete the `data/vector_stores` directory and restart
+
+## 📝 License
+
+MIT License
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📧 Support
+
+For issues and questions, please open an issue on GitHub.
+
+---
+
+**Built with ❤️ using RAG technology**

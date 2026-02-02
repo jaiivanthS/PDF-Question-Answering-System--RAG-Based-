@@ -1,8 +1,32 @@
-fastapi
-uvicorn
-pymupdf
-sentence-transformers
-faiss-cpu
-numpy
-requests
-python-multipart
+# Core Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# PDF Processing
+pymupdf==1.23.26
+
+# LangChain for RAG Pipeline
+langchain==0.1.6
+langchain-community==0.0.20
+
+# Embeddings
+sentence-transformers==2.7.0
+torch==2.2.0
+
+# Vector Database
+chromadb==0.5.0
+
+# LLM Integration (OpenRouter uses OpenAI-compatible API)
+openai==1.10.0
+
+# Frontend
+streamlit==1.31.0
+
+# Utilities
+python-dotenv==1.0.1
+pyyaml==6.0.1
+requests==2.31.0
+
+# Data Processing
+numpy==1.26.3

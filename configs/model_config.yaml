@@ -1,26 +1,38 @@
 # Model Configuration
 
-# LLM Settings
+# LLM Settings - OpenRouter API
 llm:
-  provider: "ollama"  # Options: ollama, openai, huggingface
-  model_name: "llama2"  # For Ollama: llama2, mistral, etc.
+  provider: "openrouter"
+  base_url: "https://openrouter.ai/api/v1"
+  api_key: "${OPENROUTER_API_KEY}"
+  model_name: "meta-llama/llama-3.1-8b-instruct:free"  # Free model, can be changed
   temperature: 0.7
   max_tokens: 2048
   top_p: 0.9
   
-# Embedding Model Settings
+# Embedding Model Settings - Sentence Transformers
 embeddings:
-  provider: "sentence-transformers"  # Options: sentence-transformers, openai
-  model_name: "all-MiniLM-L6-v2"
+  provider: "sentence-transformers"
+  model_name: "all-MiniLM-L6-v2"  # Fast and efficient, 384 dimensions
   dimension: 384
+  device: "cpu"  # Options: cpu, cuda
   
-# Ollama Specific Settings
-ollama:
-  base_url: "http://localhost:11434"
-  timeout: 120
+# Alternative Embedding Models (uncomment to use)
+# embeddings:
+#   model_name: "all-mpnet-base-v2"  # Higher quality, 768 dimensions
+#   dimension: 768
+
+# OpenRouter Specific Settings
+openrouter:
+  # Popular model options (update model_name above to use):
+  # Free models:
+  #   - "meta-llama/llama-3.1-8b-instruct:free"
+  #   - "google/gemma-2-9b-it:free"
+  #   - "mistralai/mistral-7b-instruct:free"
+  # Paid models (better quality):
+  #   - "anthropic/claude-3.5-sonnet"
+  #   - "openai/gpt-4-turbo"
+  #   - "google/gemini-pro-1.5"
   
-# OpenAI Settings (if using OpenAI)
-openai:
-  api_key: "${OPENAI_API_KEY}"
-  model: "gpt-3.5-turbo"
-  embedding_model: "text-embedding-ada-002"
+  site_url: "https://your-app-url.com"  # Optional: for rankings
+  app_name: "PDF-RAG-QA-System"  # Optional: for tracking

@@ -31,7 +31,7 @@ graph TB
     end
     
     subgraph "External Services"
-        Ollama[Ollama/OpenAI]
+        OpenRouter[OpenRouter API]
     end
     
     UI --> QA
@@ -39,7 +39,7 @@ graph TB
     QA --> RT
     QA --> LLM
     RT --> VectorDB
-    LLM --> Ollama
+    LLM --> OpenRouter
     PDFLoader --> FileStore
     PDFLoader --> TextProcessor
     TextProcessor --> Embedder
@@ -50,7 +50,7 @@ graph TB
 
 ### 1. User Interface Layer
 - **Streamlit UI**: Interactive web interface for uploading PDFs and asking questions
-- **REST API**: RESTful endpoints for programmatic access
+- **FastAPI REST API**: RESTful endpoints for programmatic access
 
 ### 2. Application Layer
 - **Question Answering Engine**: Orchestrates the RAG pipeline
@@ -58,16 +58,16 @@ graph TB
 - **LLM Interface**: Manages communication with language models
 
 ### 3. Data Processing Layer
-- **PDF Loader**: Extracts text from PDF documents
-- **Text Processor**: Chunks and cleans text for optimal retrieval
-- **Embedding Generator**: Creates vector embeddings from text
+- **PDF Loader**: Extracts text from PDF documents using PyMuPDF
+- **Text Processor**: Chunks and cleans text using LangChain for optimal retrieval
+- **Embedding Generator**: Creates vector embeddings using Sentence Transformers
 
 ### 4. Storage Layer
-- **Vector Database**: Stores document embeddings (ChromaDB/FAISS)
+- **Vector Database**: Stores document embeddings using ChromaDB
 - **PDF Storage**: Persists original PDF files
 
 ### 5. External Services
-- **Ollama/OpenAI**: Provides LLM capabilities for answer generation
+- **OpenRouter API**: Provides access to multiple LLM models for answer generation
 
 ## Data Flow
 
@@ -88,17 +88,20 @@ graph TB
 
 ## Technology Stack
 
-- **Framework**: Python 3.8+
-- **LLM**: Ollama (Llama2, Mistral) or OpenAI
-- **Embeddings**: Sentence Transformers
-- **Vector DB**: ChromaDB or FAISS
-- **UI**: Streamlit or Gradio
-- **API**: FastAPI
-- **PDF Processing**: PyPDF2, pdfplumber
+- **Language**: Python 3.8+
+- **Backend**: FastAPI
+- **Frontend**: Streamlit
+- **PDF Processing**: PyMuPDF
+- **Text Chunking**: LangChain
+- **Embeddings**: Sentence Transformers (all-MiniLM-L6-v2)
+- **Vector Database**: ChromaDB
+- **LLM**: OpenRouter API (supports multiple models)
+- **API Framework**: FastAPI with Uvicorn
 
 ## Scalability Considerations
 
 - Modular design allows easy swapping of components
-- Vector database can be scaled to cloud solutions (Pinecone, Weaviate)
-- API layer enables horizontal scaling
+- ChromaDB can be scaled or migrated to cloud solutions if needed
+- FastAPI enables horizontal scaling with async support
+- OpenRouter provides access to multiple LLM providers
 - Async processing for large document batches
